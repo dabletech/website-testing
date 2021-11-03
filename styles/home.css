@@ -1,0 +1,69 @@
+a.dable-btn-solid {
+    display: inline-block;
+    background: #3286ED;
+    text-decoration: none;
+    color: white;
+    border-radius: 6px;
+    font-size: 16px;
+    filter: drop-shadow(0px 2px 4px rgba(0, 0, 0, 0.288));
+}
+
+@keyframes dable-btn-solid-hover {
+    from{background: #3286ED; margin-top: 0px;}
+    to{background:  #2d77d3; margin-top: -5px;}
+}
+a.dable-btn-solid:hover{
+    animation-name: dable-btn-solid-hover;
+    animation-duration: 0.2s;
+    background:  #2d77d3;
+    margin-top: -5px;
+}
+
+
+a.dable-btn-outline {
+    font-size: 16px;
+    display: inline-block;
+    background: #999ea307;
+    text-decoration: none;
+    color: rgb(0, 0, 0);
+    border-style: solid;
+    border-radius: 6px;
+    
+}
+@keyframes dable-btn-outline-hover {
+    from{background:rgba(0, 0, 0, 0);}
+    to{background:rgba(0, 0, 0, 0.158);}
+}
+a.dable-btn-outline:hover{
+    animation-name: dable-btn-outline-hover;
+    animation-duration: 0.2s;
+    background:  rgba(0, 0, 0, 0.158);
+    
+}
+
+a.dable-link {
+    font-size: 16px;
+    display: inline-block;
+    background: #3286ed00;
+    text-decoration: none;
+    color: black;
+    border-radius: 6px;
+    
+    margin-right: 20px;
+}
+@keyframes dable-hover {
+    from{margin-top: 0px;}
+    to{margin-top: -5px;}
+}
+a.dable-link:hover{
+    animation-name: dable-hover;
+    animation-duration: 0.2s;
+    margin-top: -5px;
+}
+.dable-centered{
+    text-align: center;
+}
+img.laptop-responsive {
+    width: 60%;
+    height: auto;
+}
