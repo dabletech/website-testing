@@ -2,6 +2,8 @@ const express = require('express');
 const path = require('path')
 const app = express();
 app.use(express.static('.'));
+var port = process.env.PORT || 3000;
+app.listen(port);
 
 const YOUR_DOMAIN = 'http://localhost:80';
 
@@ -24,4 +26,4 @@ app.get('/img/:name/:extent',async(req, res)=>{
 app.get('/styleSheet/:name', async(req, res)=>{
     res.sendFile(path.join(__dirname + '/styles/'+req.params.name+'.css'))
 })
-app.listen("dable-web-test.herokuapp.com", () => console.log('Running on port 80'));
+
