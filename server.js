@@ -20,6 +20,9 @@ app.get('/home', async(req, res) => {
 app.get('/about-us', async(req, res)=>{
     res.sendFile(path.join(__dirname + '/pages/aboutus.html'))
 })
+app.get('/learn-more', async(req, res)=>{
+    res.sendFile(path.join(__dirname + '/pages/learnmore.html'))
+})
 app.get('/img/:name/:extent',async(req, res)=>{
     res.sendFile(path.join(__dirname + '/assets/'+req.params.name+'.'+req.params.extent))
 }) 
