@@ -1,11 +1,11 @@
 a.dable-btn-solid {
-    
     background: #3286ED;
     text-decoration: none;
     color: white;
     border-radius: 4px;
     font-size: 16px;
     filter: drop-shadow(0px 2px 4px rgba(0, 0, 0, 0.288));
+    padding: 5px;
 }
 
 @keyframes dable-btn-solid-hover {
@@ -22,13 +22,11 @@ a.dable-btn-solid:hover{
 
 a.dable-btn-outline {
     font-size: 16px;
-    
     background: #999ea307;
     text-decoration: none;
     color: rgb(0, 0, 0);
     border-style: solid;
     border-radius: 6px;
-    
 }
 @keyframes dable-btn-outline-hover {
     from{background:rgba(0, 0, 0, 0);}
@@ -39,15 +37,12 @@ a.dable-btn-outline:hover{
     animation-duration: 0.2s;
     background:  rgba(0, 0, 0, 0.158);
 }
-
 a.dable-link {
     font-size: 16px;
-    
     background: #3286ed00;
     text-decoration: none;
     color: black;
     border-radius: 6px;
-    
     margin-right: 20px;
 }
 @keyframes dable-hover {
@@ -65,4 +60,7 @@ a.dable-link:hover{
 img.laptop-responsive {
     width: 60%;
     height: auto;
+}
+.dable-label{
+
 }

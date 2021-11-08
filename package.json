@@ -6,13 +6,19 @@
   "scripts": {
     "start": "node server.js"
   },
+  "files": [
+    "/security/authKey.js"
+  ],
   "author": "",
   "license": "ISC",
   "dependencies": {
     "deta": "^1.0.1",
     "dotenv": "^10.0.0",
     "express": "^4.17.1",
+    "express-rate-limit": "^5.5.1",
+    "forge": "^2.3.0",
+    "node-forge": "^0.10.0",
     "spectre.css": "^0.5.9",
-    "usermanagement": "file:../../packages/userManagement"
+    "usermanagement": "file:..\\..\\packages\\userManagement"
   }
 }

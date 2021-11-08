@@ -1,0 +1,86 @@
+.signup-form{
+    filter: drop-shadow(0px 2px 4px rgba(0, 0, 0, 0.288));
+    background-color: white;
+    height:auto;
+    width: 50%;
+    margin-top: 2%;
+    margin-left: 25%;
+    border-radius: 16px;
+    padding-bottom: 30px;
+    margin-bottom: 2%;
+}
+body.background{
+    background-color: #8EC5FC;
+    background-image: linear-gradient(62deg, #8EC5FC 0%, #E0C3FC 100%);
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: 400% 400%;
+    animation-name: backgroundAnimate;
+    animation-duration: 10s;
+    animation-iteration-count: infinite;
+}
+@keyframes backgroundAnimate {
+    0%{background-position:0% 50%; }
+    50%{background-position:100% 50%; }
+    100%{background-position:0% 50%}
+}
+
+.input-field{
+    height: 100%;
+    width: 90%;
+    background-color: rgba(255, 255, 255, 0);
+    border-width: 0px;
+    border-radius: 4px;
+    
+}
+.input-field:focus{
+    outline: none;
+}
+
+.icon{
+    display: inline;
+    text-align: left;
+    height: auto;
+    width: 10%;
+}
+
+.input-area{
+    display: flex;
+    justify-content: space-between;
+    filter: drop-shadow(0px 2px 4px rgba(0, 0, 0, 0.288));
+    border-width: 1px;
+    border-style: solid;
+    border-color: rgb(48, 48, 48);
+    border-radius: 4px;
+    background-color: rgb(255, 255, 255);
+    height: 32px;
+    width: 60%;
+    margin-left: 20%;
+    margin-bottom: 10px;
+}
+.form-checkbox{
+    margin-left: 20%;
+}
+.submitBtn{
+    background: #3286ED;
+    text-decoration: none;
+    color: white;
+    border-radius: 4px;
+    font-size: 120%;
+    border-width: 0px;
+    filter: drop-shadow(0px 2px 4px rgba(0, 0, 0, 0.288));
+    padding: 5px;
+    padding-left: 20px;
+    padding-right: 20px;
+
+}
+.submitBtn:hover{
+    background: #eff6fd;
+    color: rgb(0, 0, 0);
+    cursor: pointer;
+}
+.error{
+    color: red;
+    font-size: 12px;
+    margin-left: 20%;
+}
