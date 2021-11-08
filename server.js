@@ -3,7 +3,7 @@ const rateLimit = require('express-rate-limit')
 const path = require('path')
 const forge = require('node-forge')
 const { Deta } = require('deta');
-const user = require('usermanagement');
+const user = require('@dable/usermanagement');
 
 const app = express();
 const deta = Deta('b0bj02xu_yJxh7WpXiJEcGiZkc2GZtW4aJ59UcMs8');
