@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Sign up</title>
+    <link rel="stylesheet" href="https://unpkg.com/spectre.css/dist/spectre.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/spectre.css/dist/spectre-exp.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/spectre.css/dist/spectre-icons.min.css">
+    <script src="https://unpkg.com/node-forge@0.7.0/dist/forge.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+    <script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.1/dist/js.cookie.min.js"></script>
+    <link rel="stylesheet" href="./styleSheet/signup">
+    <link rel="stylesheet" href="./styleSheet/core">
+    <link rel="icon" type="image/x-icon" href="./img/favicon/ico" />
+    <script src="./auth"></script>
+</head>
+
+
+
+<body>
+
+    <div class="signup-form animate__animated animate__slideInRight">
+        <div>
+            <img src="./img/logocircle/png" class="img-responsive"
+                style="height: auto; width: 33%; margin-left: 33%; padding-top: 20px;">
+        </div>
+        <div class="">
+            <h2 style="text-align: center; padding-top: 10px;">Get Started Today!</h2>
+        </div>
+        <div>
+            <form>
+                <section>
+
+                    <div class="input-area">
+                        <img src="./img/email-icon/svg" class="icon">
+                        <input class="input-field" type="email" placeholder="Email" id="email">
+                    </div>
+
+                    <div class="input-area">
+                        <img src="./img/password-icon/svg" class="icon">
+                        <input class="input-field" type="password" placeholder="Password" id="password">
+                    </div>
+                </section>
+                <p class='error' id="error"></p>
+                <p class="dable-centered">Don't have an account? Make one <a href="./signup" id="clicked"> here</a>!</p>
+                <section style="margin-top: 20px; text-align:center;">
+                    <button type="button" class="submitBtn" id="submitBtn" onclick="signin()">Login</button>
+                </section>
+
+            </form>
+        </div>
+    </div>
+    <script>
+        if (Cookies.get('AuthKey') == null) {
+            var newAuth = fetch('/auth', {
+                method: 'get',
+                headers: {
+                    'Content-Type': 'application/json;charset=utf-8',
+                },
+            })
+                .then(function (response) {
+                    console.log(response)
+                    return response.json();
+                })
+                .then(function (auth) {
+                    console.log(auth.AuthKey)
+                    Cookies.set('AuthKey', auth.AuthKey, { path: 'http://localhost:3000/', secure: true, sameSite: 'strict' })
+                })
+                .catch(function (error) {
+                    console.error("Error:", error);
+                });
+
+        }
+        async function signin() {
+            var email = document.getElementById("email")
+            var password = document.getElementById("password")
+            var err = document.getElementById('error')
+
+
+
+            if (email.value != "" && email.value.indexOf("@") > -1) {
+                err.innerText = ''
+
+                if (password.value != "") {
+                    err.innerText = ''
+                    dataToSend = { "email": email.value, "password": forge.util.encode64(password.value) }
+                    console.log(dataToSend)
+                    var res = await fetch("/loginUser", {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json;charset=utf-8',
+                            'key': Cookies.get('AuthKey')
+                        },
+                        body: JSON.stringify(dataToSend)
+                    })
+                    console.log(res)
+                    if (res.status == 200) {
+                        Cookies.set('Email', email.value, { path: 'http://localhost:3000/', secure: true, sameSite: 'strict' });
+                        Cookies.set('isSignedIn', true, { path: 'http://localhost:3000/', secure: true, sameSite: 'strict' });
+
+                        window.location.href = './home'
+
+                    } else {
+                        err.innerText = "Incorrect email/password"
+                    }
+                } else {
+                    err.innerText = "Must have the password"
+                }
+            } else {
+                err.innerText = "You must use a valid email"
+            }
+        }
+    </script>
+</body>
+
+</html>

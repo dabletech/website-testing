@@ -1,0 +1,21 @@
+@keyframes page-wipeOut {
+    from{padding-left: 0%;}
+    to{padding-left: 200%;}
+}
+button.pageTransition:active + body.wipeOut{
+    animation-name: page-wipeOut;
+    animation-duration: 1s;
+    padding-left: 200%;
+}
+
+@keyframes page-wipeIn {
+    from{padding-left: 200%;}
+    to{padding-left: 0%;}
+}
+body.wipeIn{
+    padding-left: 200%;
+    animation-name: page-wipeIn;
+    animation-iteration-count:1;
+    animation-duration: 1s;
+    padding-left: 0%;
+}

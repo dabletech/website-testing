@@ -9,15 +9,16 @@
     padding-bottom: 30px;
     margin-bottom: 2%;
 }
-body.background{
+body{
     background-color: #8EC5FC;
-    background-image: linear-gradient(62deg, #8EC5FC 0%, #E0C3FC 100%);
+    background-image: linear-gradient(62deg, #ffeb38 0%, #ff35a4 100%);
     background-repeat: no-repeat;
     background-attachment: fixed;
     background-size: 400% 400%;
     animation-name: backgroundAnimate;
     animation-duration: 10s;
     animation-iteration-count: infinite;
+    
 }
 @keyframes backgroundAnimate {
     0%{background-position:0% 50%; }
@@ -84,3 +85,4 @@ body.background{
     font-size: 12px;
     margin-left: 20%;
 }
+

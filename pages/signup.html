@@ -1,23 +1,26 @@
 <!DOCTYPE html>
-<html>
+<html class="">
 
 <head>
     <title>Sign up</title>
     <link rel="stylesheet" href="https://unpkg.com/spectre.css/dist/spectre.min.css">
     <link rel="stylesheet" href="https://unpkg.com/spectre.css/dist/spectre-exp.min.css">
     <link rel="stylesheet" href="https://unpkg.com/spectre.css/dist/spectre-icons.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
     <script src="https://unpkg.com/node-forge@0.7.0/dist/forge.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.1/dist/js.cookie.min.js"></script>
     <link rel="stylesheet" href="./styleSheet/signup">
-    <link rel="stylesheet" href="./styleSheet/home">
+    <link rel="stylesheet" href="./styleSheet/core">
+    <link rel="stylesheet" href="./styleSheet/page-transitions">
     <link rel="icon" type="image/x-icon" href="./img/favicon/ico" />
     <script src="./auth"></script>
 </head>
 
 
 
-<body class="background">
-
-    <div class="signup-form">
+<body>
+    
+    <div class="signup-form animate__animated animate__slideInRight">
         <div>
             <img src="./img/logocircle/png" class="img-responsive"
                 style="height: auto; width: 33%; margin-left: 33%; padding-top: 20px;">
@@ -50,6 +53,7 @@
                         <input class="input-field" type="password" placeholder="Confirm Password" id="confirmPassword">
                     </div>
                 </section>
+                <p class="dable-centered">Have an account? Login <a href="./login" id="clicked"> here</a>!</p>
                 <p class='error' id="error"></p>
                 <section>
                     <label class="form-checkbox" style="align-self: center;">
@@ -58,13 +62,34 @@
                     </label>
                 </section>
                 <section style="margin-top: 20px; text-align:center;">
-                    <button type="button" class="submitBtn" id="submitBtn" onclick="makeNewAcount()">Sign up</button>
+                    <button type="button" class="submitBtn pageTransition" id="submitBtn" onclick="makeNewAcount()">Sign
+                        up</button>
                 </section>
 
             </form>
         </div>
     </div>
     <script>
+        if (Cookies.get('AuthKey') == null) {
+            var newAuth = fetch('/auth', {
+                method: 'get',
+                headers: {
+                    'Content-Type': 'application/json;charset=utf-8',
+                },
+            })
+                .then(function (response) {
+                    console.log(response)
+                    return response.json();
+                })
+                .then(function (auth) {
+                    console.log(auth.AuthKey)
+                    Cookies.set('AuthKey', auth.AuthKey, { path: 'http://localhost:3000/', secure: true, sameSite: 'strict' })
+                })
+                .catch(function (error) {
+                    console.error("Error:", error);
+                });
+
+        }
         document.getElementById("password").oninput = function () {
 
             var password = document.getElementById("password")
@@ -77,7 +102,7 @@
         var button = document.getElementById('submitBtn')
 
 
-        function makeNewAcount() {
+        async function makeNewAcount() {
             var name = document.getElementById("name")
             var email = document.getElementById("email")
             var phone = document.getElementById("phone")
@@ -96,8 +121,7 @@
                             if (password.value != "" && password.value == passwordConfirm.value) {
                                 err.innerText = ''
                                 dataToSend = { "name": name.value, "email": email.value, "phone": phone.value.toString(), "password": forge.util.encode64(password.value) }
-                                console.log(dataToSend)
-                                var res = fetch("/new-user", {
+                                var res = await fetch("/new-user", {
                                     method: 'POST',
                                     headers: {
                                         'Content-Type': 'application/json;charset=utf-8',
@@ -105,6 +129,10 @@
                                     },
                                     body: JSON.stringify(dataToSend)
                                 })
+                                
+                                if(res.status == 455){
+                                    err.innerText="Email already used"
+                                }
                             } else {
                                 err.innerText = "Passwords must match"
                             }

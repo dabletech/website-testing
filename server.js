@@ -2,6 +2,7 @@ const express = require('express');
 const rateLimit = require('express-rate-limit')
 const path = require('path')
 const forge = require('node-forge')
+const crypto = require("crypto");
 const { Deta } = require('deta');
 const user = require('@dable/usermanagement');
 
@@ -13,13 +14,6 @@ const productDatabase = deta.Base("Products")
 app.use(express.static('.'));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json({ limit: '10kb' }));
-const limit = rateLimit({
-    max: 1,// max requests
-    windowMs: 60 * 60 * 1000, // 1 Hour
-    message: 'Too many requests' // message to send
-});
-
-app.use('/new-user', limit);
 
 var port = process.env.PORT || 3000;
 app.listen(port);
@@ -34,12 +28,15 @@ app.get('/status', async (req, res) => {
 })
 app.get('/', async (req, res) => {
     res.sendFile(path.join(__dirname + '/pages/home.html'))
-}) 
+})
 app.get('/home', async (req, res) => {
     res.sendFile(path.join(__dirname + '/pages/home.html'))
 })
-app.get('/sign-up', async (req, res) => {
+app.get('/signup', async (req, res) => {
     res.sendFile(path.join(__dirname + '/pages/signup.html'))
+})
+app.get('/login', async (req, res) => {
+    res.sendFile(path.join(__dirname + '/pages/login.html'))
 })
 app.get('/about-us', async (req, res) => {
     res.sendFile(path.join(__dirname + '/pages/aboutus.html'))
@@ -57,7 +54,10 @@ app.get('/styleSheet/:name', async (req, res) => {
     res.sendFile(path.join(__dirname + '/styles/' + req.params.name + '.css'))
 })
 app.get('/auth', async (req, res) => {
-    res.sendFile(path.join(__dirname + '/security/authKey.js'))
+    var auth = crypto.randomBytes(36).toString('hex');
+    console.log(`${auth} + 2`)
+
+    res.send({"AuthKey":auth})
 })
 
 app.post('/add-item-to-cart/:userId', async (req, res) => {
@@ -66,24 +66,51 @@ app.post('/add-item-to-cart/:userId', async (req, res) => {
 
 app.post('/new-user', async (req, res) => { //Must be carrying an Email, Address(JSON), a Name, and Valid Password. Header Must Include the Correct Auth Key
     var body = req.body
-    console.log(body)
-    console.log(req.headers.key)
     var authKeyFromClient = forge.util.decode64(req.headers.key)
-    console.log(authKeyFromClient)
-    try{
-        if (authKeyFromClient == authKey&&body.email != null&&body.name != null&&body.password != null&&body.phone!=null){
-            await user.newUser(body.email, body.phone, body.name, forge.util.decode64(body.password))
-            res.status(201)
-            res.send("Created")
-        }else if(req.headers.key != authKey){
+    try {
+        if (authKeyFromClient == authKey && body.email != null && body.name != null && body.password != null && body.phone != null) {
+            pass = forge.md.sha512.create()
+            pass.update(forge.util.decode64(body.password))
+            var newUser = await user.newUser(body.email, body.phone, body.name, pass.digest().toHex())
+            if (newUser.created == true) {
+                res.status(201)
+                res.send(newUser)
+            } else {
+                res.status(455).send("User already Created")
+            }
+        } else if (req.headers.key != authKey) {
             console.log("Wrong Key")
             res.status(401)
             res.send("Incorrect Authentication Key")
-        }else{
+        } else {
             res.status(400)
             res.send("Must have all variables")
         }
-    }catch(err){
+    } catch (err) {
         console.log(err)
+    }
+})
+app.post('/loginUser', async (req, res) => {
+    var body = req.body
+    var authKeyFromClient = forge.util.decode64(req.headers.key)
+    try {
+        if (authKeyFromClient == authKey && body.email != null && body.password != null) {
+            pass = forge.md.sha512.create()
+            pass.update(forge.util.decode64(body.password))
+            var signUser = await user.logUserIn(body.email, pass.digest().toHex())
+            if (signUser.signin == true) {
+                console.log()
+                res.status(200)
+                res.send(signUser)
+            } else {
+                res.status(454)
+                res.send("Incorrect Password/Email")
+            }
+        } else {
+            res.status(400)
+            res.send("Must have all variables")
+        }
+    } catch (error) {
+        console.log(error)
     }
 })
