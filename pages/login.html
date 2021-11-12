@@ -64,7 +64,7 @@
                 })
                 .then(function (auth) {
                     console.log(auth.AuthKey)
-                    Cookies.set('AuthKey', auth.AuthKey, { path: 'http://localhost:3000/', secure: true, sameSite: 'strict' })
+                    Cookies.set('AuthKey', auth.AuthKey, { path: 'https://dable-web-test.herokuapp.com', secure: true, sameSite: 'strict' })
                 })
                 .catch(function (error) {
                     console.error("Error:", error);
