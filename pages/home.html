@@ -32,7 +32,8 @@
                 style="font-size: 80px; font-weight: bold;">Computers as a </h1>
             <h1 class="dable-centered animate__animated animate__fadeInDown"
                 style="font-size: 80px; font-weight: bold;">work of art</h1>
-            <h4 class="dable-centered animate__animated animate__fadeInDown " style="padding-bottom: 30px;">Power Your Story</h4>
+            <h4 class="dable-centered animate__animated animate__fadeInDown " style="padding-bottom: 30px;">Power Your
+                Story</h4>
             <div class="dable-centered animate__animated animate__fadeInUp ">
                 <a class="dable-btn-outline px-2 py-2 " href="./login">Start Building</a>
                 <img src="./img/laptop/png" class="p-centered laptop-responsive">
@@ -44,30 +45,17 @@
     </div>
     <script>
         console.log(Cookies.get("isSignedIn"))
-        if(Cookies.get("isSignedIn")== "true"){
+        if (Cookies.get("isSignedIn") == "true") {
             var btn = document.getElementById("action")
             btn.setAttribute('href', "./learn-more")
             btn.innerText = "Start Building"
         }
-        if (Cookies.get('AuthKey') == null) {
-            var newAuth = fetch('/auth', {
-                method: 'get',
-                headers: {
-                    'Content-Type': 'application/json;charset=utf-8',
-                },
-            })
-                .then(function (response) {
-                    console.log(response)
-                    return response.json();
-                })
-                .then(function (auth) {
-                    console.log(auth.AuthKey)
-                    Cookies.set('AuthKey', auth.AuthKey, { path: 'https://dable-web-test.herokuapp.com', secure: true, sameSite: 'strict', expires: 14  })
-                })
-                .catch(function (error) {
-                    console.error("Error:", error);
-                });
-        }
+        fetch('/auth', {
+            method: 'get',
+            headers: {
+                'Content-Type': 'application/json;charset=utf-8',
+            },
+        })
         document.getElementById("aboutLink").addEventListener("click", (e) => {
             e.preventDefault();
             document.getElementById('about').scrollIntoView({ behavior: "smooth", alignToTop: true })

@@ -1,4 +1,5 @@
 const express = require('express');
+
 const rateLimit = require('express-rate-limit')
 const path = require('path')
 const forge = require('node-forge')
@@ -6,16 +7,12 @@ const crypto = require("crypto");
 const { Deta } = require('deta');
 const cookie = require('cookie')
 const user = require('@dable/usermanagement');
-
 const app = express();
 const deta = Deta('b0bj02xu_yJxh7WpXiJEcGiZkc2GZtW4aJ59UcMs8');
 const productDatabase = deta.Base("Products")
-
-
 app.use(express.static('.'));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json({ limit: '10kb' }));
-
 var port = process.env.PORT || 3000;
 app.listen(port);
 
@@ -54,8 +51,13 @@ app.get('/styleSheet/:name', async (req, res) => {
     res.sendFile(path.join(__dirname + '/styles/' + req.params.name + '.css'))
 })
 app.get('/auth', async (req, res) => {
-    var auth = crypto.randomBytes(36).toString('hex');
-    res.send({"AuthKey": auth })
+    res.cookie("AuthKey", authKey, {
+        httpOnly: true, secure: process.env.NODE_ENV !== "development", maxAge: 60 * 60,
+        sameSite: "strict",
+        path: "/",
+    })
+    res.send('Authed');
+    res.status("200")
 })
 
 app.post('/add-item-to-cart/:userId', async (req, res) => {
@@ -64,6 +66,7 @@ app.post('/add-item-to-cart/:userId', async (req, res) => {
 
 app.post('/new-user', async (req, res) => { //Must be carrying an Email, Address(JSON), a Name, and Valid Password. Header Must Include the Correct Auth Key
     var body = req.body
+    console.log(req)
     var authKeyFromClient = req.headers.key
     try {
         if (authKeyFromClient == authKey && body.email != null && body.name != null && body.password != null && body.phone != null) {
@@ -73,7 +76,8 @@ app.post('/new-user', async (req, res) => { //Must be carrying an Email, Address
             console.log(newUser.created)
             if (newUser.created == true) {
                 res.status(201)
-                res.setHeader("Set-Cookie", cookie.serialize('UserAuthKey', newUser.userSpecificAuthKey),{
+                res.cookie()
+                res.setHeader("Set-Cookie", cookie.serialize('UserAuthKey', newUser.userSpecificAuthKey), {
                     httpOnly: true,
                     maxAge: 60 * 60,
                     sameSite: "strict",
@@ -98,6 +102,7 @@ app.post('/new-user', async (req, res) => { //Must be carrying an Email, Address
 })
 app.post('/loginUser', async (req, res) => {
     var body = req.body
+    console.log(req)
     var authKeyFromClient = req.headers.key
     try {
         if (authKeyFromClient == authKey && body.email != null && body.password != null) {
@@ -107,7 +112,7 @@ app.post('/loginUser', async (req, res) => {
             if (signUser.signin == true) {
                 console.log()
                 res.status(200)
-                res.setHeader("Set-Cookie", cookie.serialize('UserAuthKey', signUser.userSpecificAuthKey),{
+                res.setHeader("Set-Cookie", cookie.serialize('UserAuthKey', signUser.userSpecificAuthKey), {
                     httpOnly: true,
                     secure: process.env.NODE_ENV !== "development",
                     maxAge: 60 * 60,

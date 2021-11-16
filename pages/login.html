@@ -51,26 +51,13 @@
         </div>
     </div>
     <script>
-        if (Cookies.get('AuthKey') == null) {
-            var newAuth = fetch('/auth', {
-                method: 'get',
-                headers: {
-                    'Content-Type': 'application/json;charset=utf-8',
-                },
-            })
-                .then(function (response) {
-                    console.log(response)
-                    return response.json();
-                })
-                .then(function (auth) {
-                    console.log(auth.AuthKey)
-                    Cookies.set('AuthKey', auth.AuthKey, { path: 'https://dable-web-test.herokuapp.com', secure: true, sameSite: 'strict' , expires: 14 })
-                })
-                .catch(function (error) {
-                    console.error("Error:", error);
-                });
+        fetch('/auth', {
+            method: 'get',
+            headers: {
+                'Content-Type': 'application/json;charset=utf-8',
+            },
+        })
 
-        }
         async function signin() {
             var email = document.getElementById("email")
             var password = document.getElementById("password")
