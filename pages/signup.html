@@ -19,7 +19,7 @@
 
 
 <body>
-    
+
     <div class="signup-form animate__animated animate__slideInRight">
         <div>
             <img src="./img/logocircle/png" class="img-responsive"
@@ -83,7 +83,7 @@
                 })
                 .then(function (auth) {
                     console.log(auth.AuthKey)
-                    Cookies.set('AuthKey', auth.AuthKey, { path: 'https://dable-web-test.herokuapp.com', secure: true, sameSite: 'strict' })
+                    Cookies.set('AuthKey', auth.AuthKey, { path: 'https://dable-web-test.herokuapp.com', secure: true, sameSite: 'strict', expires: 14 })
                 })
                 .catch(function (error) {
                     console.error("Error:", error);
@@ -125,13 +125,19 @@
                                     method: 'POST',
                                     headers: {
                                         'Content-Type': 'application/json;charset=utf-8',
-                                        'key': auth
+                                        'key': "unOYa%faNJ1v_4M#tY*A=lMQZM8gWlX5N#tMUPohAO0g1kYzj*rY7c25gVPpXo%5n0y|0Mwlo|X#=Yr??d-Zv+%sB@OPO_2HLkmjLanZ2L&P7BVY4_2N4+j4E9P#pzxMB?kuiFS7@CSldYRrk?djKcRqD1Et67&-v7PKea9yTom7h&M-+iGy=9Wi0hsx8pG6Ib@52!YtGqgpOtKwA=Dvd8KNj#zej&PG=mpmdZ87d@50_KcoOg8FEWD_pc-G4fek"
+
                                     },
                                     body: JSON.stringify(dataToSend)
                                 })
-                                
-                                if(res.status == 455){
-                                    err.innerText="Email already used"
+                                if (res.status == 201) {
+                                    Cookies.set('Email', email.value, { path: 'http://localhost:3000/', secure: true, sameSite: 'strict' });
+                                    Cookies.set('isSignedIn', true, { path: 'http://localhost:3000/', secure: true, sameSite: 'strict' });
+                                    window.location.href = './home'
+                                }
+                                if (res.status == 455) {
+                                    err.innerText = "Email already used"
+                                    window.location.href = './login'
                                 }
                             } else {
                                 err.innerText = "Passwords must match"

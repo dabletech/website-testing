@@ -22,7 +22,7 @@
             <a href="#about" class="dable-link px-2 py-2" id="aboutLink"><b>About us</b></a>
             <a class="dable-link px-2 py-2" href="./learn-more"><b>Learn More</b></a>
             <a class="dable-link px-2 py-2" href="./learn-more"><b>Shop</b></a>
-            <a class="dable-btn-solid px-2 py-2 " href="./login"><b>Get Started</b></a>
+            <a class="dable-btn-solid px-2 py-2" id="action" href="./login"><b>Get Started</b></a>
         </section>
     </header>
 
@@ -34,7 +34,6 @@
                 style="font-size: 80px; font-weight: bold;">work of art</h1>
             <h4 class="dable-centered animate__animated animate__fadeInDown " style="padding-bottom: 30px;">Power Your Story</h4>
             <div class="dable-centered animate__animated animate__fadeInUp ">
-
                 <a class="dable-btn-outline px-2 py-2 " href="./login">Start Building</a>
                 <img src="./img/laptop/png" class="p-centered laptop-responsive">
             </div>
@@ -44,6 +43,12 @@
 
     </div>
     <script>
+        console.log(Cookies.get("isSignedIn"))
+        if(Cookies.get("isSignedIn")== "true"){
+            var btn = document.getElementById("action")
+            btn.setAttribute('href', "./learn-more")
+            btn.innerText = "Start Building"
+        }
         if (Cookies.get('AuthKey') == null) {
             var newAuth = fetch('/auth', {
                 method: 'get',
@@ -57,16 +62,15 @@
                 })
                 .then(function (auth) {
                     console.log(auth.AuthKey)
-                    Cookies.set('AuthKey', auth.AuthKey, { path: 'https://dable-web-test.herokuapp.com', secure: true, sameSite: 'strict' })
+                    Cookies.set('AuthKey', auth.AuthKey, { path: 'https://dable-web-test.herokuapp.com', secure: true, sameSite: 'strict', expires: 14  })
                 })
                 .catch(function (error) {
                     console.error("Error:", error);
                 });
-
         }
         document.getElementById("aboutLink").addEventListener("click", (e) => {
             e.preventDefault();
-            document.getElementById('about').scrollIntoView({ behavior: "smooth" ,alignToTop: true  })
+            document.getElementById('about').scrollIntoView({ behavior: "smooth", alignToTop: true })
         });
     </script>
 </body>

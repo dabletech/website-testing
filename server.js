@@ -4,6 +4,7 @@ const path = require('path')
 const forge = require('node-forge')
 const crypto = require("crypto");
 const { Deta } = require('deta');
+const cookie = require('cookie')
 const user = require('@dable/usermanagement');
 
 const app = express();
@@ -20,7 +21,6 @@ app.listen(port);
 
 //Keys
 const authKey = "unOYa%faNJ1v_4M#tY*A=lMQZM8gWlX5N#tMUPohAO0g1kYzj*rY7c25gVPpXo%5n0y|0Mwlo|X#=Yr??d-Zv+%sB@OPO_2HLkmjLanZ2L&P7BVY4_2N4+j4E9P#pzxMB?kuiFS7@CSldYRrk?djKcRqD1Et67&-v7PKea9yTom7h&M-+iGy=9Wi0hsx8pG6Ib@52!YtGqgpOtKwA=Dvd8KNj#zej&PG=mpmdZ87d@50_KcoOg8FEWD_pc-G4fek"
-const publicAuthKey = "?b5X-+#D|Kfq^LZk"
 
 app.get('/status', async (req, res) => {
     res.status(200)
@@ -55,9 +55,7 @@ app.get('/styleSheet/:name', async (req, res) => {
 })
 app.get('/auth', async (req, res) => {
     var auth = crypto.randomBytes(36).toString('hex');
-    console.log(`${auth} + 2`)
-
-    res.send({"AuthKey":auth})
+    res.send({"AuthKey": auth })
 })
 
 app.post('/add-item-to-cart/:userId', async (req, res) => {
@@ -66,15 +64,23 @@ app.post('/add-item-to-cart/:userId', async (req, res) => {
 
 app.post('/new-user', async (req, res) => { //Must be carrying an Email, Address(JSON), a Name, and Valid Password. Header Must Include the Correct Auth Key
     var body = req.body
-    var authKeyFromClient = forge.util.decode64(req.headers.key)
+    var authKeyFromClient = req.headers.key
     try {
         if (authKeyFromClient == authKey && body.email != null && body.name != null && body.password != null && body.phone != null) {
             pass = forge.md.sha512.create()
             pass.update(forge.util.decode64(body.password))
             var newUser = await user.newUser(body.email, body.phone, body.name, pass.digest().toHex())
+            console.log(newUser.created)
             if (newUser.created == true) {
                 res.status(201)
-                res.send(newUser)
+                res.setHeader("Set-Cookie", cookie.serialize('UserAuthKey', newUser.userSpecificAuthKey),{
+                    httpOnly: true,
+                    maxAge: 60 * 60,
+                    sameSite: "strict",
+                    path: "/",
+                    secure: process.env.NODE_ENV !== "development",
+                })
+                res.send("Created")
             } else {
                 res.status(455).send("User already Created")
             }
@@ -92,7 +98,7 @@ app.post('/new-user', async (req, res) => { //Must be carrying an Email, Address
 })
 app.post('/loginUser', async (req, res) => {
     var body = req.body
-    var authKeyFromClient = forge.util.decode64(req.headers.key)
+    var authKeyFromClient = req.headers.key
     try {
         if (authKeyFromClient == authKey && body.email != null && body.password != null) {
             pass = forge.md.sha512.create()
@@ -101,12 +107,20 @@ app.post('/loginUser', async (req, res) => {
             if (signUser.signin == true) {
                 console.log()
                 res.status(200)
-                res.send(signUser)
+                res.setHeader("Set-Cookie", cookie.serialize('UserAuthKey', signUser.userSpecificAuthKey),{
+                    httpOnly: true,
+                    secure: process.env.NODE_ENV !== "development",
+                    maxAge: 60 * 60,
+                    sameSite: "strict",
+                    path: "/",
+                })
+                res.send("Logged In")
             } else {
                 res.status(454)
                 res.send("Incorrect Password/Email")
             }
         } else {
+
             res.status(400)
             res.send("Must have all variables")
         }
