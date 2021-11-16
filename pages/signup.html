@@ -12,8 +12,7 @@
     <link rel="stylesheet" href="./styleSheet/signup">
     <link rel="stylesheet" href="./styleSheet/core">
     <link rel="stylesheet" href="./styleSheet/page-transitions">
-    <link rel="icon" type="image/x-icon" href="./img/favicon/ico" />
-    <script src="./auth"></script>
+    <link rel="icon" type="image/x-icon" href="./img/favicon/ico"/>
 </head>
 
 
@@ -70,12 +69,19 @@
         </div>
     </div>
     <script>
-        fetch('/auth', {
-            method: 'get',
-            headers: {
-                'Content-Type': 'application/json;charset=utf-8',
-            },
-        })
+        async function getAuth() {
+            var auth = await fetch('/auth', {
+                method: 'get',
+                headers: {
+                    'Content-Type': 'application/json;charset=utf-8',
+                },
+            })
+            console.log(auth.status)
+            if(auth.status != 255){
+                console.log("Not Authed")
+            }
+        }
+        getAuth()
         document.getElementById("password").oninput = function () {
 
             var password = document.getElementById("password")

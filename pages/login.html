@@ -6,13 +6,12 @@
     <link rel="stylesheet" href="https://unpkg.com/spectre.css/dist/spectre.min.css">
     <link rel="stylesheet" href="https://unpkg.com/spectre.css/dist/spectre-exp.min.css">
     <link rel="stylesheet" href="https://unpkg.com/spectre.css/dist/spectre-icons.min.css">
-    <script src="https://unpkg.com/node-forge@0.7.0/dist/forge.min.js"></script>
+    <script type="script-src-elem" src="https://unpkg.com/node-forge@0.7.0/dist/forge.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
-    <script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.1/dist/js.cookie.min.js"></script>
+    <script type="script-src-elem" src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.1/dist/js.cookie.min.js"></script>
     <link rel="stylesheet" href="./styleSheet/signup">
     <link rel="stylesheet" href="./styleSheet/core">
     <link rel="icon" type="image/x-icon" href="./img/favicon/ico" />
-    <script src="./auth"></script>
 </head>
 
 
@@ -50,30 +49,34 @@
             </form>
         </div>
     </div>
-    <script>
-        fetch('/auth', {
-            method: 'get',
-            headers: {
-                'Content-Type': 'application/json;charset=utf-8',
-            },
-        })
-
+    <script type="">
+        async function getAuth() {
+            var auth = await fetch('/auth', {
+                method: 'get',
+                headers: {
+                    'Content-Type': 'application/json;charset=utf-8',
+                },
+            })
+            console.log(auth.status)
+            if(auth.status != 255){
+                console.log("Not Authed")
+            }
+        }
+        getAuth()
         async function signin() {
             var email = document.getElementById("email")
             var password = document.getElementById("password")
             var err = document.getElementById('error')
             if (email.value != "" && email.value.indexOf("@") > -1) {
                 err.innerText = ''
-
                 if (password.value != "") {
                     err.innerText = ''
-                    dataToSend = { "email": email.value, "password": forge.util.encode64(password.value) }
+                    dataToSend = { "email": email.value, "password": forge.util.encode64(password.value)}
                     console.log(dataToSend)
                     var res = await fetch("/loginUser", {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json;charset=utf-8',
-                            'key': "unOYa%faNJ1v_4M#tY*A=lMQZM8gWlX5N#tMUPohAO0g1kYzj*rY7c25gVPpXo%5n0y|0Mwlo|X#=Yr??d-Zv+%sB@OPO_2HLkmjLanZ2L&P7BVY4_2N4+j4E9P#pzxMB?kuiFS7@CSldYRrk?djKcRqD1Et67&-v7PKea9yTom7h&M-+iGy=9Wi0hsx8pG6Ib@52!YtGqgpOtKwA=Dvd8KNj#zej&PG=mpmdZ87d@50_KcoOg8FEWD_pc-G4fek"
                         },
                         body: JSON.stringify(dataToSend)
                     })
